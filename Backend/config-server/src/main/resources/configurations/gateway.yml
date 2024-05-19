@@ -1,0 +1,50 @@
+eureka:
+  client:
+    register-with-eureka: false
+server:
+  port: 8222
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            allow-credentials: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: students
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/students/**
+        - id: schools
+          uri: http://localhost:8070
+          predicates:
+            - Path=/api/v1/schools/**
+        - id: graduations
+          uri: http://localhost:8092
+          predicates:
+            - Path=/api/v1/graduations/**
+        - id: enrollments
+          uri: http://localhost:8096
+          predicates:
+            - Path=/api/v1/enrollments/**
+        - id: class
+          uri: http://localhost:8096
+          predicates:
+            - Path=/api/v1/class/**
+        - id: auth
+          uri: http://localhost:8093
+          predicates:
+            - Path=/api/v1/auth/**
+
+
+

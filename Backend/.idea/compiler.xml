@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="config-server" />
+        <module name="schedule" />
+        <module name="Graduation" />
+        <module name="academicInformation" />
+        <module name="school" />
+        <module name="student" />
+        <module name="discovery" />
+        <module name="course" />
+        <module name="gateway" />
+        <module name="authentication" />
+        <module name="enrollment" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="userservice" target="17" />
+      <module name="userservice.main" target="17" />
+      <module name="userservice.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Graduation" options="" />
+      <module name="academicInformation" options="" />
+      <module name="authentication" options="" />
+      <module name="config-server" options="-parameters" />
+      <module name="course" options="-parameters" />
+      <module name="discovery" options="-parameters" />
+      <module name="enrollment" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="schedule" options="" />
+      <module name="school" options="-parameters" />
+      <module name="student" options="-parameters" />
+      <module name="userservice" options="-parameters" />
+      <module name="student" options="" />
+    </option>
+  </component>
+</project>
