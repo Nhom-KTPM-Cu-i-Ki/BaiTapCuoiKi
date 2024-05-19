@@ -17,17 +17,28 @@ public class Course {
     @Column(name = "course_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long courseId;
-    @Column(name = "course_name",nullable = false,unique = true)
+    @Column(name = "course_name",nullable = false,unique = true,columnDefinition = "nvarchar(255)")
     private String courseName;
     @Column(nullable = false)
     private int credits;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name="prerequisites", joinColumns = @JoinColumn(name="course_id"))
-    @Column(name="prerequisite_id", nullable = false)
-
-    private Set<Long> prerequisite;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "prerequisites",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "prerequisite_id"))
+    private Set<Course> prerequisites;
 
     @ManyToOne
     private Department department;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseId=" + courseId +
+                ", courseName='" + courseName + '\'' +
+                ", credits=" + credits +
+                ", prerequisites=" + prerequisites +
+                ", department=" + department +
+                '}';
+    }
 }

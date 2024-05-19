@@ -8,15 +8,6 @@ spring:
     name: gateway
   cloud:
     gateway:
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "http://localhost:3000"
-            allowedHeaders: "*"
-            allowedMethods: "*"
-            allow-credentials: true
       discovery:
         locator:
           enabled: true
@@ -33,18 +24,24 @@ spring:
           uri: http://localhost:8092
           predicates:
             - Path=/api/v1/graduations/**
-        - id: enrollments
-          uri: http://localhost:8096
+        - id: course
+          uri: http://localhost:8095
           predicates:
-            - Path=/api/v1/enrollments/**
+            - Path=/api/v1/courses/**
+        - id: academy
+          uri: http://localhost:8094
+          predicates:
+            - Path=/api/v1/academy/**
         - id: class
           uri: http://localhost:8096
           predicates:
             - Path=/api/v1/class/**
-        - id: auth
-          uri: http://localhost:8093
+        - id: enrollments
+          uri: http://localhost:8096
           predicates:
-            - Path=/api/v1/auth/**
-
-
+            - Path=/api/v1/enrollments/**
+        - id: schedule
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/v1/schedule/**
 

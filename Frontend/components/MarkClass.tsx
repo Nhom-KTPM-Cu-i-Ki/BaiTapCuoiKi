@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { get } from "@/lib/http";
 
 const invoices = [
   {
@@ -39,8 +40,40 @@ const invoices = [
     cuoiKi: "9",
   },
 ];
+interface Grade{
+  gradeId:number,
+  courseDto:CourseDto,
+  regular:number,
+  mid:number,
+  finalOfTerm:number,
+  total:number
+}
+
+interface CourseDto{
+  courseId: number,
+  courseName: string,
+  credits: number
+}
+
+
 
 export default function MarkClass() {
+  const [grades,setGrades] = useState<Grade[]>();
+
+  const id = 1;
+  const sid = 1;
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await get<Grade[]>("/api/v1/academy/grades/student/"+id);
+        const data = res.data;
+        setGrades(data)
+      } catch (error) {
+        console.error("Failed to fetch courses", error);
+      }
+    };
+    fetchCourses();
+  }, []);
   return (
     <div className="pb-6">
       <div className="flex text-3xl justify-center pb-4 border-b-2 pt-6">
@@ -51,28 +84,28 @@ export default function MarkClass() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-center">STT</TableHead>
-              <TableHead className="text-center">Mã LHP</TableHead>
               <TableHead>Tên lớp học phần</TableHead>
-              <TableHead className="text-center">Lớp</TableHead>
               <TableHead className="text-center">Thường kỳ 1</TableHead>
               <TableHead className="text-center">Thường kỳ 2</TableHead>
               <TableHead className="text-center">Cuối kỳ </TableHead>
+              <TableHead className="text-center">Tổng kết </TableHead>
+              <TableHead className="text-center">Xuất loại </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.maLHP}>
-                <TableCell className="text-center">{invoice.stt}</TableCell>
-                <TableCell className="text-center">{invoice.maLHP}</TableCell>
-                <TableCell>{invoice.tenLHP}</TableCell>
-                <TableCell className="text-center">{invoice.lop}</TableCell>
+            {grades?.map((grade) => (
+              <TableRow key={grade.gradeId}>
+                <TableCell className="text-center">{grades.indexOf(grade)+1}</TableCell>
+                <TableCell>{grade.courseDto.courseName}</TableCell>
+                <TableCell className="text-center">{grade.regular}</TableCell>
+                <TableCell className="text-center">{grade.mid}</TableCell>
                 <TableCell className="text-center">
-                  {invoice.thuongKy1}
+                  {grade.finalOfTerm}
                 </TableCell>
                 <TableCell className="text-center">
-                  {invoice.thuongKy2}
+                  {grade.total}
                 </TableCell>
-                <TableCell className="text-center">{invoice.cuoiKi}</TableCell>
+                <TableCell className="text-center">{grade.total>9?"Xuất sắc":grade.total<9?"Giỏi":grade.total<8?"Khá":grade.total<7?"Trung bình":grade.total<5?"Yếu":"Kém"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

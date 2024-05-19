@@ -11,12 +11,12 @@ spring:
   application:
     name: schools
   datasource:
-    url: jdbc:mariadb://localhost:3306/springboot_mariadb?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://localhost:3306/springboot_mariadb
     username: root
     password: 1007
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 application:
   config:
     student-url: http://localhost:8222/api/v1/students

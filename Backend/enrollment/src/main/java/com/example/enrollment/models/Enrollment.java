@@ -2,27 +2,27 @@ package com.example.enrollment.models;
 
 
 import com.example.enrollment.enums.Status;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Table
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Table
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long enrollmentId;
+
     @Column(name = "student_id",nullable = false)
     private long studentId;
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "class_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "class_id",nullable = false)
     private Classzz classId;
     @Column(name = "registration_date",nullable = false)
     private LocalDate registrationDate;

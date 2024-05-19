@@ -10,9 +10,9 @@ spring:
   application:
     name: course
   datasource:
-    url: jdbc:mariadb://localhost:3306/authentications?createDatabaseIfNotExist=true
+    url: jdbc:mariadb://localhost:3306/course?createDatabaseIfNotExist=true
     username: root
-    password: 1007
+    password: 123
   jpa:
     hibernate:
       ddl-auto: update

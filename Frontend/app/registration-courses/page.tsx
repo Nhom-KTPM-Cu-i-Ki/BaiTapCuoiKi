@@ -1,6 +1,6 @@
 "use client"
 import { Checkbox } from "@/components/ui/checkbox";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,68 +12,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ClassCredit from "@/components/ClassCredit";
-import DetailClassCredit from "@/components/DetailClassCredit";
 import ClassRegistration from "@/components/ClassRegistration";
 import { Button } from "@/components/ui/button";
-
 import Link from "next/link";
+import { get } from "@/lib/http";
 
-const invoices = [
-  {
-    icon: true,
-    stt: "1",
-    maMH: "2106529",
-    maHP: "4203003194",
-    tenMH: "Hội họa",
-    tc: "3",
-    hocphan: "002137",
-  },
-  {
-    icon: true,
-    stt: "1",
-    maMH: "2106529",
-    maHP: "4203003194",
-    tenMH: "Hội họa",
-    tc: "3",
-    hocphan: "002137",
-  },
-  {
-    icon: true,
-    stt: "1",
-    maMH: "2106529",
-    maHP: "4203003194",
-    tenMH: "Hội họa",
-    tc: "3",
-    hocphan: "002137",
-  },
-  {
-    icon: true,
-    stt: "1",
-    maMH: "2106529",
-    maHP: "4203003194",
-    tenMH: "Hội họa",
-    tc: "3",
-    hocphan: "002137",
-  },
-  {
-    icon: true,
-    stt: "1",
-    maMH: "2106529",
-    maHP: "4203003194",
-    tenMH: "Hội họa",
-    tc: "3",
-    hocphan: "002137",
-  },
-];
+interface Course {
+  courseId: number,
+  courseName: string,
+  credits: number,
+  department: {
+    departmentName: string,
+  }
+  prerequisites: Course[]
+}
 
 function RegistrationCourses() {
-  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course>();
+  const [courses, setCourses] = useState<Course[]>([])
+  const department = 1;
+  const student = 2;
+  useEffect(() => {
+    const fetchCourses = async () => {
 
-  const handleUpdate = () => {
-    setShouldUpdate(prevState => !prevState);
-     // Kích hoạt việc render lại toàn bộ trang
-     console.log(shouldUpdate)
-  };
+      try {
+        const res = await get("/api/v1/courses/course_require/department/" + department + "/student/" + student);
+        const data = res.data;
+        setCourses(data as Course[]);
+      } catch (error) {
+        console.error("Failed to fetch courses", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <div className="w-full h-auto p-8 ">
       <Link
@@ -89,36 +62,47 @@ function RegistrationCourses() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]"></TableHead>
               <TableHead className="w-[100px]">STT</TableHead>
-              <TableHead>Mã MH cũ</TableHead>
-              <TableHead>Mã HP</TableHead>
+              <TableHead>Mã môn học</TableHead>
               <TableHead>Tên môn học</TableHead>
-              <TableHead>TC</TableHead>
-              <TableHead>Tiên quyết</TableHead>
+              <TableHead>Số tín chỉ</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.stt}>
-                <TableCell className="font-medium">
-                  {" "}
-                  {invoice.icon ? <Checkbox /> : ""}
-                </TableCell>
-                <TableCell>{invoice.stt}</TableCell>
-                <TableCell>{invoice.maMH}</TableCell>
-                <TableCell>{invoice.maHP}</TableCell>
-                <TableCell>{invoice.tenMH}</TableCell>
-                <TableCell>{invoice.tc}</TableCell>
-                <TableCell>{invoice.hocphan}</TableCell>
+            {courses.map((course) => (
+              <TableRow key={course.courseId}
+                onClick={() => {
+                  let temp = true; // Giả sử tất cả các điều kiện tiên quyết đều đã được đáp ứng
+                  const promises = course.prerequisites.map(async (c) => {
+                    const check = await get<boolean>(
+                      `/api/v1/academy/grades/check/student_id/${student}/course_id/${c.courseId}`
+                    );
+                    temp = temp && check.data; // Kiểm tra xem tất cả các API call đều trả về true
+                    console.log(temp);
+                    return check; // Trả về Promise để Promise.all có thể chờ
+                  });
+
+                  Promise.all(promises).then(() => {
+                    if (temp) {
+                      setSelectedCourse(course);
+                    } else {
+                      alert("Môn này chưa thể đăng ký");
+                    }
+                  });
+                }}
+              >
+                <TableCell>{courses.indexOf(course) + 1}</TableCell>
+                <TableCell>{course.courseId}</TableCell>
+                <TableCell>{course.courseName}</TableCell>
+                <TableCell>{course.credits}</TableCell>
               </TableRow>
-            ))}
+            )
+            )}
           </TableBody>
-          <TableFooter></TableFooter>
         </Table>
       </div>
-      <ClassCredit  />
-      <ClassRegistration shouldUpdate={handleUpdate} />
+      {selectedCourse ? <ClassCredit course={selectedCourse} /> : null}
+      <ClassRegistration />
     </div>
   );
 }

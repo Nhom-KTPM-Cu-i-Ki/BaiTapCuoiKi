@@ -10,35 +10,81 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import DetailClassCredit from "@/components/DetailClassCredit";
 import { Checkbox } from "./ui/checkbox";
 import { get } from "@/lib/http";
-import DetailClassCredit from "./DetailClassCredit";
 
+const invoices = [
+  {
+    icon: true,
+    stt: "1",
+    maLHP: "420300233002",
+    tenLHP: "Lập trình phân tích dữ liệu 2",
+    lopDukien: "DHKTPM16A",
+    siso: "80",
+    daDangKy: "0",
+  },
+  {
+    icon: true,
+    stt: "1",
+    maLHP: "420300233002",
+    tenLHP: "Lập trình phân tích dữ liệu 2",
+    lopDukien: "DHKTPM16A",
+    siso: "80",
+    daDangKy: "0",
+  },
+  {
+    icon: true,
+    stt: "1",
+    maLHP: "420300233002",
+    tenLHP: "Lập trình phân tích dữ liệu 2",
+    lopDukien: "DHKTPM16A",
+    siso: "80",
+    daDangKy: "0",
+  },
+];
 
+interface Classs{
+  classId:number,
+  courseId:number,
+  enrollments:Enrollment[],
+  instructor:string,
+  maxStudents:number,
+  roomId:number,
+  scheduleId:number,
+  semester:number
+}
 
+interface Enrollment{
+  enrollmentId:number
+}
 
-export default function ClassCredit() {
-  const [classList, setClassList] = useState<any[]>([]);
-  const [selectedClass, setSelectedClass] = useState<any>(null);
+interface Course{
+  courseId:number,
+  courseName:string,
+  credits:number
+}
+
+interface ClassCreditProps {
+  course?: Course;
+}
+export default function ClassCredit({ course }: ClassCreditProps) {
+  const [classes,setClasses] = useState<Classs[]>([])
+  const [selectedClass, setSelectedClass] = useState<Classs>();
   
-  const getAllClasses =async ()=>{
-    try {
-      const res = await get<any[]>("/api/v1/class");
-      const data = res.data;
-      setClassList(data);
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const updateClassList = async () => {
-    getAllClasses(); // Gọi lại hàm lấy toàn bộ dữ liệu
-  };
   useEffect(() => {
-    getAllClasses();
-  }, []);
-  const handleRowClick = (classItem: any) => {
-    setSelectedClass(classItem);
-  };
+    const fetchCourses = async () => {
+      try {
+        const res = await get("/api/v1/class/course_id/"+course?.courseId);
+        const data = res.data;
+        setClasses(data as Classs[]);
+        console.log(data)
+      } catch (error) {
+        console.error("Failed to fetch courses", error);
+      }
+    };
+    fetchCourses();
+  }, [course]);
   return (
     <div className="pb-6">
       <div className="flex text-3xl justify-center pb-4 border-b-2 pt-6">
@@ -48,36 +94,40 @@ export default function ClassCredit() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]"></TableHead>
               <TableHead>STT</TableHead>
               <TableHead>Mã LHP</TableHead>
               <TableHead>Tên lớp học phần</TableHead>
               <TableHead>Lớp dự kiến</TableHead>
               <TableHead>Sĩ số tối đa</TableHead>
               <TableHead>Đã đăng ký</TableHead>
-              <TableHead>Tình trạng</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {classList.map((classItem, index) => (
-              <TableRow key={classItem.maLHP} onClick={() => handleRowClick(classItem)} className="cursor-pointer">
-                <TableCell className="font-medium">
-                  {classItem.icon ? <Checkbox /> : ""}
-                </TableCell>
-                <TableCell>{index+1}</TableCell>
-                <TableCell>{classItem.classId}</TableCell>
-                <TableCell>{classItem.tenLHP}</TableCell>
-                <TableCell>{classItem.lopDukien}</TableCell>
-                <TableCell>{classItem.maxStudents}</TableCell>
-                <TableCell>{classItem.enrollmentCount}</TableCell>
-                <TableCell>{classItem.status}</TableCell>
+            {classes.map((clasz) => (
+              <TableRow key={clasz.classId}
+              onClick={()=>{
+                if(clasz.enrollments.length>=clasz.maxStudents){
+                  alert("Lớp đã đủ sinh viên")
+                }
+                else{
+                setSelectedClass(clasz)
+                }
+              }}
+              >
+         
+                <TableCell>{classes.indexOf(clasz)}</TableCell>
+                <TableCell>{clasz.classId}</TableCell>
+                <TableCell>{course?.courseName}</TableCell>
+                <TableCell>{clasz.roomId}</TableCell>
+                <TableCell>{clasz.maxStudents}</TableCell>
+                <TableCell>{clasz.enrollments.length}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter></TableFooter>
         </Table>
       </div>
-      {selectedClass && <DetailClassCredit classItem={selectedClass} updateClassList={updateClassList} />}
+      {selectedClass?<DetailClassCredit classs = {selectedClass}/>:""}
     </div>
   );
 }

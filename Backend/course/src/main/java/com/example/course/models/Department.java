@@ -17,11 +17,20 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")
     private long departmentId;
-    @Column(name = "department_name",nullable = false,unique = true)
+    @Column(name = "department_name",nullable = false,unique = true,columnDefinition = "nvarchar(255)")
     private String departmentName;
     @Column(name = "require_Credits",nullable = false)
     private int requireCredits;
 
-    @OneToMany(mappedBy = "department")
-    private List<Course> courses;
+//    @OneToMany(mappedBy = "department")
+//    private List<Course> courses;
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "departmentId=" + departmentId +
+                ", departmentName='" + departmentName + '\'' +
+                ", requireCredits=" + requireCredits +
+                '}';
+    }
 }

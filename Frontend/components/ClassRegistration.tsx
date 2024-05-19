@@ -1,5 +1,4 @@
-"use client"
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -11,39 +10,54 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { get, remove,} from "@/lib/http";
 
-interface ClassRegistrationProps {
-  shouldUpdate: () => void;
+const invoices = [
+  {
+    stt: "1",
+    maLHP: "420300154901",
+    tenMH: "Kiến trúc và Thiết kế phần mềm",
+    lopHocDuKien: "DHKTPM16A",
+    soTC: "4",
+    nhomTH: "3",
+    hocPhi: "3,010,000",
+    ngayDK: "25/12/2023",
+  },
+  {
+    stt: "1",
+    maLHP: "420300154901",
+    tenMH: "Kiến trúc và Thiết kế phần mềm",
+    lopHocDuKien: "DHKTPM16A",
+    soTC: "4",
+    nhomTH: "3",
+    hocPhi: "3,010,000",
+    ngayDK: "25/12/2023",
+  },
+  {
+    stt: "1",
+    maLHP: "420300154901",
+    tenMH: "Kiến trúc và Thiết kế phần mềm",
+    lopHocDuKien: "DHKTPM16A",
+    soTC: "4",
+    nhomTH: "3",
+    hocPhi: "3,010,000",
+    ngayDK: "25/12/2023",
+  },
+];
+
+interface Classs{
+  classId:number,
+  instructor:string,
+  roomId:number,
+  scheduleId:number,
+  semester:string,
 }
-export default function ClassRegistration({ shouldUpdate }: ClassRegistrationProps) {
-  const [enrollments, setEnrollments] = useState<any[]>([]);
-  const getAllEnrollments =async ()=>{
-    try {
-      const res = await get<any[]>("/api/v1/enrollments/studentId/1");
-      const data = res.data;
-      setEnrollments(data);
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const handleDelte =async (invoice:any)=>{
-    try {
-      const studentId  =1
-      const classId = invoice.classId.classId
-      const res = await remove(`/api/v1/enrollments/studentId/${studentId}/classId/${classId}`);
-      setEnrollments(enrollments.filter(item => item.classId.classId !== classId));
-      shouldUpdate();
-      alert("Xóa thành công")
-    } catch (error) {
-      console.log(error)
-      alert("Xóa thất bại")
-    }
-  }
-  useEffect(() => {
-    getAllEnrollments();
-  }, []);
-  console.log(enrollments)
+
+
+interface ClassCreditProps {
+  classs?: Classs;
+}
+export default function ClassRegistration({ classs }: ClassCreditProps) {
+  
   return (
     <div className="pb-6">
       <div className="flex text-3xl justify-center pb-6">
@@ -64,18 +78,16 @@ export default function ClassRegistration({ shouldUpdate }: ClassRegistrationPro
             </TableRow>
           </TableHeader>
           <TableBody>
-            {enrollments.map((invoice,index) => (
+            {invoices.map((invoice) => (
               <TableRow key={invoice.stt}>
-                
                 <TableCell className="font-medium">{invoice.stt}</TableCell>
-                <TableCell>{invoice.classId.classId}</TableCell>
+                <TableCell>{invoice.maLHP}</TableCell>
                 <TableCell>{invoice.tenMH}</TableCell>
                 <TableCell>{invoice.lopHocDuKien}</TableCell>
-                <TableCell>{invoice.creditEarned}</TableCell>
+                <TableCell>{invoice.soTC}</TableCell>
                 <TableCell>{invoice.nhomTH}</TableCell>
-                <TableCell>{invoice.tuitionFee}</TableCell>
-                <TableCell>{invoice.registrationDate}</TableCell>
-                <Button onClick={()=>{handleDelte(invoice)}}>Hủy</Button>
+                <TableCell>{invoice.hocPhi}</TableCell>
+                <TableCell>{invoice.ngayDK}</TableCell>
               </TableRow>
             ))}
           </TableBody>

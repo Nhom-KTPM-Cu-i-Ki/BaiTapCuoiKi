@@ -21,6 +21,8 @@ public class Student {
     private long studentId;
     @Column(name = "user_id",nullable = false)
     private long userId;
+    @Column(nullable = false,columnDefinition = "NVARCHAR(255)")
+    private String name;
     @Column(name = "department_id",nullable = false)
     private long departmentId;
     @Column(name = "total_credits",nullable = false)
@@ -28,6 +30,6 @@ public class Student {
     @Column(name = "graduation_status",nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private Status graduationStatus;
-    @OneToMany(mappedBy = "student")
-    private List<Grade> grades;
+//    @OneToMany(mappedBy = "student")
+//    private List<Grade> grades;
 }
