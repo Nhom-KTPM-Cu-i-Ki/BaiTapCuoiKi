@@ -106,5 +106,21 @@ function RegistrationCourses() {
     </div>
   );
 }
-
+// export default function ClassCredit({ course }: ClassCreditProps) {
+//   const [classes,setClasses] = useState<Classs[]>([])
+//   const [selectedClass, setSelectedClass] = useState<Classs>();
+  
+//   useEffect(() => {
+//     const fetchCourses = async () => {
+//       try {
+//         console.log(course)
+//         const res = await axios.get("http://localhost:8096/api/v1/class/course_id/"+course?.courseId);
+//         const data = res.data;
+//         setClasses(data as Classs[]);
+//       } catch (error) {
+//         console.error("Failed to fetch courses", error);
+//       }
+//     };
+//     fetchCourses();
+//   }, [course]);
 export default RegistrationCourses;

@@ -8,6 +8,15 @@ spring:
     name: gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            allow-credentials: true
       discovery:
         locator:
           enabled: true
@@ -44,4 +53,7 @@ spring:
           uri: http://localhost:8091
           predicates:
             - Path=/api/v1/schedule/**
-
+        - id: auth
+          uri: http://localhost:8093
+          predicates:
+            - Path=/api/v1/auth/**
