@@ -10,9 +10,9 @@ spring:
   application:
     name: schedules
   datasource:
-    url: jdbc:mariadb://localhost:3306/schedule?createDatabaseIfNotExist=True
+    url: jdbc:mariadb://localhost:3306/springboot_mariadb?createDatabaseIfNotExist=true
     username: root
-    password: 123
+    password: 1007
   jpa:
     hibernate:
       ddl-auto: update

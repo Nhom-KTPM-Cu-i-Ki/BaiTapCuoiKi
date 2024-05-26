@@ -25,10 +25,6 @@ public class ClassService {
         return repository.findAll();
     }
 
-    public List<Classzz> findByCourse(long id){
-        return repository.getClasszzByCourseId(id);
-    }
-
     public  void deleteClasszz(long id){
         repository.deleteById(id);
     }

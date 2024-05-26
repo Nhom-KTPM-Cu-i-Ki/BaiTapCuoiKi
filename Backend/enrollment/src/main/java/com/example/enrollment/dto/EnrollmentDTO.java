@@ -1,6 +1,6 @@
 package com.example.enrollment.dto;
 
-import com.example.enrollment.enums.*;
+import com.example.enrollment.enums.Status;
 import lombok.Builder;
 import lombok.Data;
 

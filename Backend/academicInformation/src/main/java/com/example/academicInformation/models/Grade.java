@@ -20,12 +20,6 @@ public class Grade {
     private Student student;
     @Column(name = "course_id",nullable = false)
     private long courseId;
-    @Column(nullable = false)
-    private double regular;
-    @Column(nullable = false)
-    private double mid;
-    @Column(name = "final_of_term",nullable = false)
-    private double finalOfTerm;
-    @Column(insertable = false)
-    private double total = regular*0.2+mid*0.3+finalOfTerm*0.5;
+    @Column(name = "grade",nullable = false)
+    private double grade;
 }

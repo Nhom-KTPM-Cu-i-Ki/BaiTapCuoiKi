@@ -20,6 +20,8 @@ public class GraduationController {
     public void save(@RequestBody Graduation graduation){
         service.saveGraduation(graduation);
     }
+
+    @GetMapping("/all")
     public ResponseEntity<List<Graduation>> findAllGraduation(){
         return  ResponseEntity.ok(service.findAllGraduations());
     }

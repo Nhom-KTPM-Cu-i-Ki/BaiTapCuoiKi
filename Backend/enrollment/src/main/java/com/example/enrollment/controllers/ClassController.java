@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/class")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class ClassController {
     private final ClassService service;
 
@@ -28,15 +27,6 @@ public class ClassController {
     public  ResponseEntity<?> responseEntity(){
         try {
             List<Classzz> Lists = service.findAll();
-            return ResponseEntity.ok(Lists);
-        }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Lay du lieu khong thanh cong");
-        }
-    }
-    @GetMapping("/course_id/{id}")
-    public  ResponseEntity<?> getClassByCourse(@PathVariable("id") long id){
-        try {
-            List<Classzz> Lists = service.findByCourse(id);
             return ResponseEntity.ok(Lists);
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Lay du lieu khong thanh cong");

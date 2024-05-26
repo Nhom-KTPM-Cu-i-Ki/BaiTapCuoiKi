@@ -8,12 +8,12 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Table
+@Builder
 public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class Enrollment {
 
     @Column(name = "student_id",nullable = false)
     private long studentId;
-    @ManyToOne
-    @JoinColumn(name = "class_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "class_id", nullable = false)
     private Classzz classId;
     @Column(name = "registration_date",nullable = false)
     private LocalDate registrationDate;
