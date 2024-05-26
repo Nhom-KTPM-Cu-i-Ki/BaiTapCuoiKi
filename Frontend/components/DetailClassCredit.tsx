@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { get, post } from "@/lib/http";
 
 const invoices = [
   {
@@ -38,44 +37,8 @@ const invoices = [
     tgian: "25/12/2023 - 22/04/2024",
   },
 ];
-interface Classs{
-  classId:number,
-  courseId:number,
-  instructor:string,
-  maxStudents:number,
-  roomId:number,
-  scheduleId:number,
-  semester:number
-}
 
-interface Schedule{
-  scheduleId:number,
-  classId:number,
-  dayOfWeek:string,
-  time:string,
-  group:number
-}
-
-interface ClassCreditProps {
-  classs?: Classs;
-}
-
-export default function DetailClassCredit({ classs }: ClassCreditProps) {
-  console.log(classs)
-  const [schedules,setSchedules] = useState<Schedule[]>();
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const res = await get("api/v1/schedule/class_id/"+classs?.classId);
-        const data = res.data;
-        setSchedules(data as Schedule[])
-        console.log(data)
-      } catch (error) {
-        console.error("Failed to fetch courses", error);
-      }
-    };
-    fetchCourses();
-  }, [classs]);
+export default function DetailClassCredit() {
   return (
     <div className="pb-6">
       <div className="flex text-3xl justify-center pb-6">
@@ -94,25 +57,21 @@ export default function DetailClassCredit({ classs }: ClassCreditProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {schedules?.map((schedule) => (
-              <TableRow key={schedule.scheduleId}>
-                <TableCell>{schedules?.indexOf(schedule)+1}</TableCell>
-                <TableCell>{schedule.dayOfWeek}:{schedule.time}</TableCell>
-                <TableCell>{schedule.group}</TableCell>
-                <TableCell>{classs?.roomId}</TableCell>
-                <TableCell>{classs?.instructor}</TableCell>
-                <TableCell>{classs?.semester}</TableCell>
+            {invoices.map((invoice) => (
+              <TableRow key={invoice.stt}>
+                <TableCell>{invoice.stt}</TableCell>
+                <TableCell>{invoice.lichhoc}</TableCell>
+                <TableCell>{invoice.nhomTH}</TableCell>
+                <TableCell>{invoice.phong}</TableCell>
+                <TableCell>{invoice.giangvien}</TableCell>
+                <TableCell>{invoice.tgian}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter></TableFooter>
         </Table>
         <div className="flex justify-center pt-6">
-          <Button
-          onClick={ async()=>{
-            // post()
-          }}
-          >Đăng ký môn học</Button>
+          <Button>Đăng ký môn học</Button>
         </div>
       </div>
     </div>

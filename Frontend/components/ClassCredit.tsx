@@ -1,5 +1,4 @@
-"use client"
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -10,9 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import DetailClassCredit from "@/components/DetailClassCredit";
 import { Checkbox } from "./ui/checkbox";
-import { get } from "@/lib/http";
 
 const invoices = [
   {
@@ -44,47 +41,7 @@ const invoices = [
   },
 ];
 
-interface Classs{
-  classId:number,
-  courseId:number,
-  enrollments:Enrollment[],
-  instructor:string,
-  maxStudents:number,
-  roomId:number,
-  scheduleId:number,
-  semester:number
-}
-
-interface Enrollment{
-  enrollmentId:number
-}
-
-interface Course{
-  courseId:number,
-  courseName:string,
-  credits:number
-}
-
-interface ClassCreditProps {
-  course?: Course;
-}
-export default function ClassCredit({ course }: ClassCreditProps) {
-  const [classes,setClasses] = useState<Classs[]>([])
-  const [selectedClass, setSelectedClass] = useState<Classs>();
-  
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const res = await get("/api/v1/class/course_id/"+course?.courseId);
-        const data = res.data;
-        setClasses(data as Classs[]);
-        console.log(data)
-      } catch (error) {
-        console.error("Failed to fetch courses", error);
-      }
-    };
-    fetchCourses();
-  }, [course]);
+export default function ClassCredit() {
   return (
     <div className="pb-6">
       <div className="flex text-3xl justify-center pb-4 border-b-2 pt-6">
@@ -94,6 +51,7 @@ export default function ClassCredit({ course }: ClassCreditProps) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[100px]"></TableHead>
               <TableHead>STT</TableHead>
               <TableHead>Mã LHP</TableHead>
               <TableHead>Tên lớp học phần</TableHead>
@@ -103,31 +61,23 @@ export default function ClassCredit({ course }: ClassCreditProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {classes.map((clasz) => (
-              <TableRow key={clasz.classId}
-              onClick={()=>{
-                if(clasz.enrollments.length>=clasz.maxStudents){
-                  alert("Lớp đã đủ sinh viên")
-                }
-                else{
-                setSelectedClass(clasz)
-                }
-              }}
-              >
-         
-                <TableCell>{classes.indexOf(clasz)}</TableCell>
-                <TableCell>{clasz.classId}</TableCell>
-                <TableCell>{course?.courseName}</TableCell>
-                <TableCell>{clasz.roomId}</TableCell>
-                <TableCell>{clasz.maxStudents}</TableCell>
-                <TableCell>{clasz.enrollments.length}</TableCell>
+            {invoices.map((invoice) => (
+              <TableRow key={invoice.maLHP}>
+                <TableCell className="font-medium">
+                  {invoice.icon ? <Checkbox /> : ""}
+                </TableCell>
+                <TableCell>{invoice.stt}</TableCell>
+                <TableCell>{invoice.maLHP}</TableCell>
+                <TableCell>{invoice.tenLHP}</TableCell>
+                <TableCell>{invoice.lopDukien}</TableCell>
+                <TableCell>{invoice.siso}</TableCell>
+                <TableCell>{invoice.daDangKy}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter></TableFooter>
         </Table>
       </div>
-      {selectedClass?<DetailClassCredit classs = {selectedClass}/>:""}
     </div>
   );
 }
